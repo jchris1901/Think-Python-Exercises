@@ -36,6 +36,16 @@ polygon(bob,y,z)
 
 #4
 
+def circle(t,r):
+    cir = 2 * 3.14 * r
+    n = int(cir/4)+1
+    length = cir / n
+    polygon(t,n,length)
+
+circle(bob,100)
+
+#5
+
 def arc(t, r, angle):
     arc_length = 2 * pi * r * abs(angle) / 360
     n = int(arc_length / 4) + 1
@@ -47,13 +57,6 @@ def arc(t, r, angle):
         lt(t, step_angle)
     rt(t, step_angle/2)
 
-
-def circle(t, r):
-    arc(t, r, 360)
-
-circle(bob,100)
-
-#5
 
 arc(bob, 100, 180)
 
