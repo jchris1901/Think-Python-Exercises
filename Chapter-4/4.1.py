@@ -1,64 +1,102 @@
 # Exercise 4.1
 
-from swampy.TurtleWorld import *
-world = TurtleWorld()
-bob = Turtle()
+"""This module contains code from
+Think Python by Allen B. Downey
+http://thinkpython.com
 
-#1
+Copyright 2012 Allen B. Downey
+License: GNU GPLv3 http://www.gnu.org/licenses/gpl.html
 
-def square(t):
+"""
+
+import math
+
+try:
+    # see if Swampy is installed as a package
+    from swampy.TurtleWorld import *
+except ImportError:
+    # otherwise see if the modules are on the PYTHONPATH
+    from TurtleWorld import *
+
+
+def square(t, length):
+    """Draws a square with sides of the given length.
+
+    Returns the Turtle to the starting position and location.
+    """
     for i in range(4):
-        fd(t,100)
+        fd(t, length)
         lt(t)
 
-square(bob)
 
-#2
+def polyline(t, n, length, angle):
+    """Draws n line segments.
 
-def square2(t,l):
-    for i in range(4):
-        fd(t,l)
-        lt(t)
-
-x = int(raw_input("Enter Length : "))
-square2(bob,x)
-
-#3
-
-def polygon(t,l,n):
+    t: Turtle object
+    n: number of line segments
+    length: length of each segment
+    angle: degrees between segments
+    """
     for i in range(n):
-        fd(t,l)
-        lt(t,360/n)
+        fd(t, length)
+        lt(t, angle)
 
-y = int(raw_input("Enter Length : "))
-z = int(raw_input("Enter number of edges : "))
-polygon(bob,y,z)
 
-#4
+def polygon(t, n, length):
+    """Draws a polygon with n sides.
 
-def circle(t,r):
-    cir = 2 * 3.14 * r
-    n = int(cir/4)+1
-    length = cir / n
-    polygon(t,n,length)
+    t: Turtle
+    n: number of sides
+    length: length of each side.
+    """
+    angle = 360.0/n
+    polyline(t, n, length, angle)
 
-circle(bob,100)
-
-#5
 
 def arc(t, r, angle):
-    arc_length = 2 * pi * r * abs(angle) / 360
+    """Draws an arc with the given radius and angle.
+
+    t: Turtle
+    r: radius
+    angle: angle subtended by the arc, in degrees
+    """
+    arc_length = 2 * math.pi * r * abs(angle) / 360
     n = int(arc_length / 4) + 1
     step_length = arc_length / n
     step_angle = float(angle) / n
+
+    # making a slight left turn before starting reduces
+    # the error caused by the linear approximation of the arc
     lt(t, step_angle/2)
-    for i in range(n):
-        fd(t, step_length)
-        lt(t, step_angle)
+    polyline(t, n, step_length, step_angle)
     rt(t, step_angle/2)
 
 
-arc(bob, 100, 180)
+def circle(t, r):
+    """Draws a circle with the given radius.
+
+    t: Turtle
+    r: radius
+    """
+    arc(t, r, 360)
 
 
-wait_for_user()
+# the following condition checks whether we are
+# running as a script, in which case run the test code,
+# or being imported, in which case don't.
+
+if __name__ == '__main__':
+    world = TurtleWorld()    
+
+    bob = Turtle()
+    bob.delay = 0.001
+
+    # draw a circle centered on the origin
+    radius = 100
+    pu(bob)
+    fd(bob, radius)
+    lt(bob)
+    pd(bob)
+    circle(bob, radius)
+
+    wait_for_user()
